@@ -25,6 +25,35 @@ export const planLabel = (stdout: string) => {
   }
 }
 
+// OAuth usage endpoint -> windows, so session/week show before the first API response.
+// Token is read inside the child process (macOS keychain) and never reaches argv.
+const FETCH = `
+import sys,json,subprocess,urllib.request
+t=json.loads(subprocess.check_output(['security','find-generic-password','-s','Claude Code-credentials','-w']))['claudeAiOauth']['accessToken']
+r=urllib.request.Request('https://api.anthropic.com/api/oauth/usage',headers={'Authorization':'Bearer '+t,'anthropic-beta':'oauth-2025-04-20'})
+sys.stdout.write(urllib.request.urlopen(r,timeout=10).read().decode())
+`
+
+export const parseUsage = (stdout: string): SessionRateLimit[] => {
+  try {
+    const j = JSON.parse(stdout)
+    return Object.keys(LABELS).flatMap(kind =>
+      typeof j[kind]?.utilization === 'number'
+        ? [{ kind, percentUsed: Math.round(j[kind].utilization * 10) / 10, resetsAt: j[kind].resets_at }]
+        : [],
+    )
+  } catch {
+    return []
+  }
+}
+
+// ponytail: macOS keychain only; elsewhere or on failure the bar waits for the first response
+async function seed($: EngineInterface, snap: Record<string, SessionRateLimit>) {
+  const r = await $.process.run(['python3', '-c', FETCH], { timeoutMs: 15_000 }).catch(() => null)
+  for (const l of parseUsage(r?.stdout ?? '')) snap[l.kind] ??= l
+  $.ui.invalidate('ui.render')
+}
+
 async function take($: EngineInterface, snap: Record<string, SessionRateLimit>, kind: string) {
   const l = (await $.session.usage()).rateLimits.find(r => r.kind === kind)
   if (l) snap[kind] = l
@@ -49,6 +78,7 @@ export const register: Register = (on, options) => {
 
   on('session.start', async ($, e, next) => {
     await Promise.all([take($, snap, 'five_hour'), take($, snap, 'seven_day')]).catch(() => {})
+    await seed($, snap)
     plan = await planOf($, plan)
     $.ui.invalidate('ui.render')
     return next(e)
@@ -86,7 +116,7 @@ export const register: Register = (on, options) => {
     if (!primed) {
       primed = true
       void Promise.all([take($, snap, 'five_hour'), take($, snap, 'seven_day'), planOf($, plan).then(p => (plan = p))])
-        .then(() => $.ui.invalidate('ui.render'))
+        .then(() => seed($, snap))
         .catch(() => {})
     }
     const limits = Object.keys(LABELS).map(k => [k, snap[k]] as const)
