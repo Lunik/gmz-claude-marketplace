@@ -1,5 +1,5 @@
 {
   "name": "context-cache",
   "version": "0.3.5",
-  "description": "Band above the prompt: context fill and prompt cache (hit rate, countdown from the TTL the API reports). Toasts when context is full or the cache expired."
+  "description": "Bottom-grid row: context fill and prompt cache (hit rate, countdown from the TTL the API reports). Toasts when context is full or the cache expired."
 }

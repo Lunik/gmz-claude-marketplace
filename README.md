@@ -7,12 +7,12 @@ Personal [Claude Code](https://claude.com/claude-code) plugin marketplace: small
 ```
 Model Sonnet 5.5 ▾ ┃ Effort medium ▾
 ────────────────────────────────────────────────────────────────────────────────────────────
-❯
+❯ my super prompt
 ────────────────────────────────────────────────────────────────────────────────────────────
-  ⏵⏵ auto mode on (shift+tab to cycle)    LLM speed  ┃ TTFT 2.17s             ┃ Throughput 195.2 tok/s ┃ Requests 3
-                                          Context    ┃ Window 17%             ┃ Cache hit 99%          ┃ Cache TTL 4m33s
-                                          rtk        ┃ Tokens saved 566.8K    ┃ Quota preserved 9.4%
-                                          Claude Pro ┃ session ▰▰▰▱▱▱▱▱▱▱ 32% ┃ week ▰▰▰▰▰▰▰▰▱▱ 82%
+              LLM speed  ┃ TTFT 2.17s             ┃ Throughput 195.2 tok/s ┃ Requests 3
+              Context    ┃ Window 17%             ┃ Cache hit 99%          ┃ Cache TTL 4m33s
+              rtk        ┃ Tokens saved 566.8K    ┃ Quota preserved 9.4%
+              Claude Pro ┃ session ▰▰▰▱▱▱▱▱▱▱ 32% ┃ week ▰▰▰▰▰▰▰▰▱▱ 82%
 ```
 
 ## Install
@@ -26,13 +26,15 @@ Repeat the second command for each plugin you want, then run `/reload-plugins`.
 
 ## Plugins
 
+Each plugin has its own README.
+
 | Plugin | What it shows |
 |---|---|
-| `usage-tracker` | Subscription plan and the 5-hour (`session`) and 7-day (`week`) usage bars. Toasts at 80% and 90%. |
-| `llm-speed` | Average time to first token, output tokens per second, number of requests. |
-| `context-cache` | Context window fill, prompt cache hit rate and cache TTL countdown. Toasts at 70/85/95% context, on a cache miss, and shortly before the cache expires. |
-| `rtk-quota` | Tokens saved and quota preserved, from [`rtk gain`](https://github.com/rtk-ai/rtk). Option `tier` (default `20x`) is used for Max plans; Pro is detected automatically. |
-| `model-band` | Model and reasoning effort selectors above the prompt (not in the grid). Effort is read from `settings.json` until the first turn reports it. |
+| [`usage-tracker`](./usage-tracker) | Subscription plan and the 5-hour (`session`) and 7-day (`week`) usage bars. Toasts at 80% and 90%. |
+| [`llm-speed`](./llm-speed) | Average time to first token, output tokens per second, number of requests. |
+| [`context-cache`](./context-cache) | Context window fill, prompt cache hit rate and cache TTL countdown. Toasts at 70/85/95% context, on a cache miss, and shortly before the cache expires. |
+| [`rtk-quota`](./rtk-quota) | Tokens saved and quota preserved, from [`rtk gain`](https://github.com/rtk-ai/rtk). Option `tier` (default `20x`) is used for Max plans; Pro is detected automatically. |
+| [`model-band`](./model-band) | Model and reasoning effort selectors above the prompt (not in the grid). Effort is read from `settings.json` until the first turn reports it. |
 
 ## Startup data
 
