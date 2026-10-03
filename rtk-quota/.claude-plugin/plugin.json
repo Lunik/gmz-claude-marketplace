@@ -1,6 +1,6 @@
 {
   "name": "rtk-quota",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Band showing rtk gain: tokens saved and quota preserved",
   "types": "./types/index.d.ts",
   "userConfig": {

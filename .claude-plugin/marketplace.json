@@ -27,7 +27,7 @@
     {
       "name": "model-band",
       "source": "./model-band",
-      "description": "Band above the prompt: model and reasoning effort"
+      "description": "Band in the bottom grid: model and reasoning effort"
     }
   ]
 }

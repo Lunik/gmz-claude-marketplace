@@ -22,6 +22,8 @@ export const tierOf = (stdout: string, fallback: string) => {
 
 // ponytail: module var resets on hot reload; costs one extra `claude auth status`
 let authOut = ''
+// ponytail: after a hot reload no session.start/turn.complete fires; one lazy fetch on first render fills the row
+let primed = false
 
 async function refresh($: EngineInterface, fallback: string) {
   if (!authOut) {
@@ -51,6 +53,10 @@ export const register: Register = (on, options) => {
   // stacked above the usage bar (SessionMode, bottom right)
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
     const g = await read($, gain)
+    if (!g && !primed) {
+      primed = true
+      void refresh($, String(options.tier ?? '20x')).catch(() => {})
+    }
     const other = await next(e)
     if (!g) return other
     const { Box, Text } = $.ui.resolve(e)
