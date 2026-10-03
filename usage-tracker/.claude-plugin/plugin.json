@@ -1,5 +1,5 @@
 {
   "name": "usage-tracker",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Footer (bottom right): plan, session/week usage, LLM speed. Toasts when limits near."
 }

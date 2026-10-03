@@ -58,7 +58,6 @@ export const register: Register = (on, options) => {
       void refresh($, String(options.tier ?? '20x')).catch(() => {})
     }
     const other = await next(e)
-    if (!g) return other
     const { Box, Text } = $.ui.resolve(e)
     const line = (
       <Box>
@@ -67,14 +66,14 @@ export const register: Register = (on, options) => {
           <Text color="#565f89"> ┃ </Text>
           <Box width={24}>
             <Text dimColor>Tokens saved </Text>
-            <Text bold color="#c0caf5">{g.saved}</Text>
+            <Text bold color={g ? '#c0caf5' : '#565f89'}>{g?.saved ?? '-'}</Text>
           </Box>
         </Box>
         <Box>
           <Text color="#565f89"> ┃ </Text>
           <Box>
             <Text dimColor>Quota preserved </Text>
-            <Text bold color="#c0caf5">{g.preserved}</Text>
+            <Text bold color={g ? '#c0caf5' : '#565f89'}>{g?.preserved ?? '-'}</Text>
           </Box>
         </Box>
       </Box>

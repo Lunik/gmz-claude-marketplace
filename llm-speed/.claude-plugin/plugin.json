@@ -1,1 +1,1 @@
-{ "name": "llm-speed", "version": "0.3.3", "description": "Band showing avg time to first token and output tokens/s", "types": "./types/index.d.ts" }
+{ "name": "llm-speed", "version": "0.3.4", "description": "Band showing avg time to first token and output tokens/s", "types": "./types/index.d.ts" }

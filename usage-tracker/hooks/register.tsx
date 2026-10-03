@@ -81,25 +81,24 @@ export const register: Register = (on, options) => {
 
   // bottom right, beside the prompt footer's mode labels
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
-    const limits = Object.keys(LABELS).flatMap(k => snap[k] ?? [])
+    const limits = Object.keys(LABELS).map(k => [k, snap[k]] as const)
     const other = await next(e)
-    if (!limits.length) return other
 
     const { Box, Text } = $.ui.resolve(e)
     const bar = (
       <Box>
         <Box width={11}><Text bold color="#7dcfff">{plan}</Text></Box>
-        {limits.map((l, n) => (
-          <Box key={l.kind}>
+        {limits.map(([kind, l], n) => (
+          <Box key={kind}>
             <Text color="#565f89"> ┃ </Text>
             <Box width={n < limits.length - 1 ? 24 : undefined}>
-              <Text dimColor>{LABELS[l.kind]} </Text>
+              <Text dimColor>{LABELS[kind]} </Text>
               {Array.from({ length: WIDTH }, (_, i) => (
-                <Text key={i} color={i < cells(l.percentUsed) ? color((i + 1) * (100 / WIDTH), USAGE_STEPS) : '#3b4261'}>
-                  {i < cells(l.percentUsed) ? '▰' : '▱'}
+                <Text key={i} color={l && i < cells(l.percentUsed) ? color((i + 1) * (100 / WIDTH), USAGE_STEPS) : '#3b4261'}>
+                  {l && i < cells(l.percentUsed) ? '▰' : '▱'}
                 </Text>
               ))}
-              <Text bold color={color(l.percentUsed, USAGE_STEPS)}> {Math.round(l.percentUsed)}%</Text>
+              <Text bold color={l ? color(l.percentUsed, USAGE_STEPS) : '#565f89'}> {l ? `${Math.round(l.percentUsed)}%` : '-'}</Text>
             </Box>
           </Box>
         ))}

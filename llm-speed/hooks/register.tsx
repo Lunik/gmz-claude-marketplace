@@ -43,7 +43,6 @@ export const register: Register = on => {
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
     const s = await read($, speed)
     const other = await next(e)
-    if (!s.steps) return other
     const { Box, Text } = $.ui.resolve(e)
     const line = (
       <Box>
@@ -52,21 +51,21 @@ export const register: Register = on => {
           <Text color="#565f89"> ┃ </Text>
           <Box width={24}>
             <Text dimColor>TTFT </Text>
-            <Text bold color="#c0caf5">{`${(s.ttftMs / s.steps / 1000).toFixed(2)}s`}</Text>
+            <Text bold color={s.steps ? '#c0caf5' : '#565f89'}>{s.steps ? `${(s.ttftMs / s.steps / 1000).toFixed(2)}s` : '-'}</Text>
           </Box>
         </Box>
         <Box>
           <Text color="#565f89"> ┃ </Text>
           <Box width={24}>
             <Text dimColor>Throughput </Text>
-            <Text bold color="#c0caf5">{`${(s.tokens / (s.genMs / 1000)).toFixed(1)} tok/s`}</Text>
+            <Text bold color={s.genMs ? '#c0caf5' : '#565f89'}>{s.genMs ? `${(s.tokens / (s.genMs / 1000)).toFixed(1)} tok/s` : '-'}</Text>
           </Box>
         </Box>
         <Box>
           <Text color="#565f89"> ┃ </Text>
           <Box>
             <Text dimColor>Requests </Text>
-            <Text bold color="#c0caf5">{s.steps}</Text>
+            <Text bold color={s.steps ? '#c0caf5' : '#565f89'}>{s.steps || '-'}</Text>
           </Box>
         </Box>
       </Box>

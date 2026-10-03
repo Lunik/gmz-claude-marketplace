@@ -94,38 +94,31 @@ export const register: Register = on => {
     const left = lastAt ? lastAt + ttl - (await $.clock.now()) : undefined
     const isCache = left !== undefined && tokens >= BIG
     const other = await next(e)
-    if (percent === undefined && !isCache) return other
     const { Box, Text } = $.ui.resolve(e)
     const line = (
       <Box>
         <Box width={11}><Text bold color="#7dcfff">Context</Text></Box>
-        {percent !== undefined && (
-          <Box>
-            <Text color="#565f89"> ┃ </Text>
-            <Box width={24}>
-              <Text dimColor>Window </Text>
-              <Text bold color={color(percent)}>{`${percent}%`}</Text>
-            </Box>
+        <Box>
+          <Text color="#565f89"> ┃ </Text>
+          <Box width={24}>
+            <Text dimColor>Window </Text>
+            <Text bold color={percent === undefined ? '#565f89' : color(percent)}>{percent === undefined ? '-' : `${percent}%`}</Text>
           </Box>
-        )}
-        {isCache && hit !== undefined && (
-          <Box>
-            <Text color="#565f89"> ┃ </Text>
-            <Box width={24}>
-              <Text dimColor>Cache hit </Text>
-              <Text bold color={hit < 20 ? 'error' : '#c0caf5'}>{`${hit}%`}</Text>
-            </Box>
+        </Box>
+        <Box>
+          <Text color="#565f89"> ┃ </Text>
+          <Box width={24}>
+            <Text dimColor>Cache hit </Text>
+            <Text bold color={!isCache || hit === undefined ? '#565f89' : hit < 20 ? 'error' : '#c0caf5'}>{isCache && hit !== undefined ? `${hit}%` : '-'}</Text>
           </Box>
-        )}
-        {isCache && (
+        </Box>
+        <Box>
+          <Text color="#565f89"> ┃ </Text>
           <Box>
-            <Text color="#565f89"> ┃ </Text>
-            <Box>
-              <Text dimColor>Cache TTL </Text>
-              <Text bold color={left > 0 ? '#c0caf5' : 'error'}>{left > 0 ? fmt(left) : 'expired'}</Text>
-            </Box>
+            <Text dimColor>Cache TTL </Text>
+            <Text bold color={!isCache ? '#565f89' : left > 0 ? '#c0caf5' : 'error'}>{!isCache ? '-' : left > 0 ? fmt(left) : 'expired'}</Text>
           </Box>
-        )}
+        </Box>
       </Box>
     )
     return other.type === 'engine' ? line : (
