@@ -44,6 +44,8 @@ export const register: Register = (on, options) => {
   // what the bar shows: session refreshed every step, week and plan every turn
   const snap: Record<string, SessionRateLimit> = {}
   let plan = 'Claude'
+  // ponytail: after a hot reload session.start does not fire; the first render loads what it would have
+  let primed = false
 
   on('session.start', async ($, e, next) => {
     await Promise.all([take($, snap, 'five_hour'), take($, snap, 'seven_day')]).catch(() => {})
@@ -81,6 +83,12 @@ export const register: Register = (on, options) => {
 
   // bottom right, beside the prompt footer's mode labels
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
+    if (!primed) {
+      primed = true
+      void Promise.all([take($, snap, 'five_hour'), take($, snap, 'seven_day'), planOf($, plan).then(p => (plan = p))])
+        .then(() => $.ui.invalidate('ui.render'))
+        .catch(() => {})
+    }
     const limits = Object.keys(LABELS).map(k => [k, snap[k]] as const)
     const other = await next(e)
 

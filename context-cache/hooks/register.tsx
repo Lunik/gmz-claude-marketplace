@@ -1,4 +1,4 @@
-import type { Register } from 'claude-code'
+import type { EngineInterface, Register } from 'claude-code'
 
 const CONTEXT_STEPS = [70, 85, 95]
 const BIG = 20_000 // tokens: below this a cold cache costs little
@@ -39,24 +39,32 @@ let hit: number | undefined
 let isCacheNotified = false
 let isNearNotified = false
 
+// ponytail: also started by the first render, since a hot reload does not fire session.start
+let ticking = false
+const startTick = ($: EngineInterface) => {
+  if (ticking) return
+  ticking = true
+  $.clock.every(TICK, async () => {
+    const tokens = (await $.session.usage()).context.tokens ?? 0
+    const left = lastAt ? lastAt + ttl - (await $.clock.now()) : undefined
+    if (left !== undefined && left > 0 && left <= NEAR && tokens >= BIG && !isNearNotified) {
+      isNearNotified = true
+      $.ui.toast(`Cache expires in ${fmt(left)}: send a prompt to keep ${Math.round(tokens / 1000)}k tokens cached.`)
+    }
+    if (left !== undefined && left <= 0 && tokens >= BIG && !isCacheNotified) {
+      isCacheNotified = true
+      $.ui.toast(`Cache expired: next prompt re-reads ${Math.round(tokens / 1000)}k tokens uncached. Consider /compact first.`)
+    }
+    $.ui.invalidate('ui.render')
+  })
+}
+
 export const register: Register = on => {
   // ponytail: 5m until a response reports otherwise; no usage split in the response = stays 5m
   // ponytail: module vars reset on hot reload; worst case a repeat toast, cache unknown until next turn
 
   on('session.start', ($, e, next) => {
-    $.clock.every(TICK, async () => {
-      const tokens = (await $.session.usage()).context.tokens ?? 0
-      const left = lastAt ? lastAt + ttl - (await $.clock.now()) : undefined
-      if (left !== undefined && left > 0 && left <= NEAR && tokens >= BIG && !isNearNotified) {
-        isNearNotified = true
-        $.ui.toast(`Cache expires in ${fmt(left)}: send a prompt to keep ${Math.round(tokens / 1000)}k tokens cached.`)
-      }
-      if (left !== undefined && left <= 0 && tokens >= BIG && !isCacheNotified) {
-        isCacheNotified = true
-        $.ui.toast(`Cache expired: next prompt re-reads ${Math.round(tokens / 1000)}k tokens uncached. Consider /compact first.`)
-      }
-      $.ui.invalidate('ui.render')
-    })
+    startTick($)
     return next(e)
   })
 
@@ -90,6 +98,7 @@ export const register: Register = on => {
 
   // stacked above the usage bar (SessionMode, bottom right)
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
+    startTick($)
     const { percent, tokens = 0 } = (await $.session.usage()).context
     const left = lastAt ? lastAt + ttl - (await $.clock.now()) : undefined
     const isCache = left !== undefined && tokens >= BIG

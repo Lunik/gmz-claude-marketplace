@@ -1,4 +1,4 @@
-import type { Register } from 'claude-code'
+import type { EngineInterface, Register } from 'claude-code'
 
 // "claude-sonnet-5-5" -> "Sonnet 5.5"; drops "claude-" and a trailing -YYYYMMDD
 export const displayName = (model: string) => {
@@ -9,6 +9,12 @@ export const displayName = (model: string) => {
 // ponytail: fixed list; a model not in it still shows (as current) but is not offered
 const MODELS = ['claude-fable-5-1', 'claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-4-5-20251001']
 const EFFORTS = ['low', 'medium', 'high', 'xhigh', 'max']
+
+// effort before any turn: the per-model setting, else the global one
+const savedEffort = async ($: EngineInterface, m: string) => {
+  const s = (await $.settings.read().catch(() => ({}))) as { effortLevel?: string; modelSettings?: Record<string, { effortLevel?: string }> }
+  return s.modelSettings?.[m]?.effortLevel ?? s.effortLevel
+}
 
 export const register: Register = on => {
   // ponytail: module vars reset on hot reload; model/effort show again after the next turn step
@@ -28,6 +34,7 @@ export const register: Register = on => {
     if (e.props.hasSurvey) return next(e)
     const m = model || (await $.session.model())
     if (!m) return next(e)
+    effort ??= await savedEffort($, m)
 
     const { Box, Text, Select } = $.ui.resolve(e)
     const modelIds = MODELS.includes(m) ? MODELS : [m, ...MODELS]
