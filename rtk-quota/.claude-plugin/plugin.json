@@ -1,0 +1,15 @@
+{
+  "name": "rtk-quota",
+  "version": "0.3.2",
+  "description": "Band showing rtk gain: tokens saved and quota preserved",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "tier": {
+      "type": "string",
+      "title": "Subscription tier",
+      "description": "Passed to rtk gain --tier.",
+      "default": "20x",
+      "options": ["pro", "5x", "20x"]
+    }
+  }
+}

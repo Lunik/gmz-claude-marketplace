@@ -1,0 +1,33 @@
+{
+  "name": "local-mods",
+  "owner": {
+    "name": "guillaume"
+  },
+  "plugins": [
+    {
+      "name": "usage-tracker",
+      "source": "./usage-tracker",
+      "description": "Session/weekly subscription usage in status line + toasts"
+    },
+    {
+      "name": "llm-speed",
+      "source": "./llm-speed",
+      "description": "Band showing avg time to first token and output tokens/s"
+    },
+    {
+      "name": "rtk-quota",
+      "source": "./rtk-quota",
+      "description": "Band showing rtk gain: tokens saved and quota preserved"
+    },
+    {
+      "name": "context-cache",
+      "source": "./context-cache",
+      "description": "Band: context fill and prompt cache (hit rate, TTL)"
+    },
+    {
+      "name": "model-band",
+      "source": "./model-band",
+      "description": "Band above the prompt: model and reasoning effort"
+    }
+  ]
+}
