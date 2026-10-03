@@ -24,8 +24,8 @@ export const register: Register = on => {
     return yield* next(e)
   })
 
-  // stacked in the bottom grid (SessionMode, bottom right) with the other bands
-  on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
+  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    if (e.props.hasSurvey) return next(e)
     const m = model || (await $.session.model())
     if (!m) return next(e)
 
@@ -35,26 +35,21 @@ export const register: Register = on => {
     const other = await next(e)
     const line = (
       <Box>
-        <Box width={11}><Text bold color="#7dcfff">Model</Text></Box>
-        <Box>
-          <Text color="#565f89"> ┃ </Text>
-          <Box width={24}>
-            <Select
-              key="model"
-              value={m}
-              options={modelIds.map(id => ({ value: id, label: displayName(id) }))}
-              onSelect={id => {
-                model = id
-                void $.command.run({ command: 'model', args: id })
-                $.ui.invalidate('ui.render')
-              }}
-            />
-          </Box>
-        </Box>
+        <Text bold color="#7dcfff">Model </Text>
+        <Select
+          key="model"
+          value={m}
+          options={modelIds.map(id => ({ value: id, label: displayName(id) }))}
+          onSelect={id => {
+            model = id
+            void $.command.run({ command: 'model', args: id })
+            $.ui.invalidate('ui.render')
+          }}
+        />
         {effort !== undefined && (
           <Box>
             <Text color="#565f89"> ┃ </Text>
-            <Text dimColor>Effort </Text>
+            <Text bold color="#7dcfff">Effort </Text>
             <Select
               key="effort"
               value={String(effort)}
@@ -70,7 +65,7 @@ export const register: Register = on => {
       </Box>
     )
     return other.type === 'engine' ? line : (
-      <Box flexDirection="column" alignItems="flex-start">
+      <Box flexDirection="column">
         {other}
         {line}
       </Box>
