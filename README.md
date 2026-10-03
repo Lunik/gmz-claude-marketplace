@@ -35,6 +35,7 @@ Each plugin has its own README.
 | [`context-cache`](./context-cache) | Context window fill, prompt cache hit rate and cache TTL countdown. Toasts at 70/85/95% context, on a cache miss, and shortly before the cache expires. |
 | [`rtk-quota`](./rtk-quota) | Tokens saved and quota preserved, from [`rtk gain`](https://github.com/rtk-ai/rtk). Option `tier` (default `20x`) is used for Max plans; Pro is detected automatically. |
 | [`model-band`](./model-band) | Model and reasoning effort selectors above the prompt (not in the grid). Effort is read from `settings.json` until the first turn reports it. |
+| [`clawd-gotchi`](./clawd-gotchi) | Retro RPG companion in two rows at the bottom left, under the prompt hint. Fed by cache hits and commits, hurt by cache misses and quota above 90%. A failing test run spawns a boss whose HP is the failure count. Rows always drawn, dim `-` when idle. Animated face; option `name` renames the companion. |
 
 ## Startup data
 

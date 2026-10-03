@@ -28,6 +28,11 @@
       "name": "model-band",
       "source": "./model-band",
       "description": "Band above the prompt: model and reasoning effort"
+    },
+    {
+      "name": "clawd-gotchi",
+      "source": "./clawd-gotchi",
+      "description": "Retro RPG companion at the bottom left: pet fed by your session, test-suite bosses"
     }
   ]
 }
