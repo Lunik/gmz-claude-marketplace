@@ -2,12 +2,17 @@
 
 Personal [Claude Code](https://claude.com/claude-code) plugin marketplace: small status bands for the terminal UI.
 
-The bands share one grid at the bottom right of the screen, each row with a label and `┃`-separated cells. Every cell is rendered from the first frame and shows a dimmed `-` until its data is available.
+`model-band` sits above the prompt. The other bands share one grid at the bottom right of the screen, each row with a label and `┃`-separated cells. Every cell is rendered from the first frame and shows a dimmed `-` until its data is available.
 
 ```
-LLM speed ┃ TTFT 2.18s      ┃ Throughput 115.5 tok/s ┃ Requests 33
-Context   ┃ Window 11%      ┃ Cache hit 99%          ┃ Cache TTL 4m26s
-Claude Pro┃ session ▰▰▰▱▱▱▱▱▱▱ 25% ┃ week ▰▰▰▰▰▰▰▰▱▱ 81%
+Model Sonnet 5.5 ▾ ┃ Effort medium ▾
+────────────────────────────────────────────────────────────────────────────────────────────
+❯
+────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ auto mode on (shift+tab to cycle)    LLM speed  ┃ TTFT 2.17s             ┃ Throughput 195.2 tok/s ┃ Requests 3
+                                          Context    ┃ Window 17%             ┃ Cache hit 99%          ┃ Cache TTL 4m33s
+                                          rtk        ┃ Tokens saved 566.8K    ┃ Quota preserved 9.4%
+                                          Claude Pro ┃ session ▰▰▰▱▱▱▱▱▱▱ 32% ┃ week ▰▰▰▰▰▰▰▰▱▱ 82%
 ```
 
 ## Install
