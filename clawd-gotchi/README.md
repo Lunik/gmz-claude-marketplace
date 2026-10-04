@@ -40,7 +40,7 @@ Events play a short reaction (3 seconds, highlighted) over the loop:
 
 The boss has its own loop too.
 
-Mood follows HP and activity (no label when all is well): `affamé` below 50 HP, `malade` below 25 HP, `dort` after 5 minutes idle, `K.O.` at 0 HP, `au combat` while a boss is out.
+Mood follows HP and activity and shows in the face only: hungry below 50 HP, sick below 25 HP, asleep after 5 minutes idle, K.O. at 0 HP, fighting while a boss is out.
 
 ## Boss fights
 

@@ -1,6 +1,6 @@
 {
   "name": "clawd-gotchi",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Bottom-left retro RPG companion: a pet fed by cache hits and commits, failing test suites as bosses.",
   "types": "./types/index.d.ts",
   "userConfig": {

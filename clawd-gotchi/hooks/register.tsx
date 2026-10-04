@@ -143,7 +143,6 @@ export type Mood = 'ko' | 'sleep' | 'sick' | 'hungry' | 'fight' | 'happy'
 export const mood = (pet: Pet, boss: Boss | null, idleMs: number): Mood =>
   pet.hp <= 0 ? 'ko' : idleMs > IDLE ? 'sleep' : pet.hp < 25 ? 'sick' : pet.hp < 50 ? 'hungry' : boss ? 'fight' : 'happy'
 
-const LABELS: Record<Mood, string> = { happy: '', fight: 'au combat', hungry: 'affamé', sick: 'malade', sleep: 'dort', ko: 'K.O.' }
 
 // idle loops, one frame per FRAME ms; leading spaces make it hop inside its fixed cell
 const LOOPS: Record<Mood, string[]> = {
@@ -309,7 +308,6 @@ export const register: Register = (on, options) => {
           <Box width={24}>
             <Text dimColor>Nv.{level(pet.xp)} </Text>
             <Text bold color={r ? '#e0af68' : '#c0caf5'}>{face(m, frame, r)}</Text>
-            <Text dimColor> {LABELS[m]}</Text>
           </Box>
           {sep}
           <Box width={24}>
